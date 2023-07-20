@@ -35,6 +35,7 @@ const App = () => {
   const [palletteItems, setPalletteItems] = useState<ItemType[]>(() => ["red", "green", "blue"].map((color) => ({ id: id_gen(), color })));
 
   const [activeItem, setActiveItem] = useState<ItemType | null>(null);
+  //origin only tell that the dragged item is from chosen(current)/favorite
   const [activeItemOrigin, setActiveItemOrigin] = useState<string | null>(null)
 
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
@@ -67,10 +68,6 @@ const App = () => {
 
   const onDragOver = ({ active, over }: DragOverEvent) => {
 
-    console.log(`1. the active is `,active)
-    console.log(`origin is `, activeItemOrigin)
-    console.log(`the acitve current `,activeItem)
-    console.log(`the over is `,over)    
     if (!over) {
       if (activeItemOrigin === null) return;
       const indx = palletteItems.findIndex(x => x.id === active.id);
@@ -101,7 +98,7 @@ const App = () => {
       setPalletteItems(arrayMove(palletteItems, active_indx, over_indx))
     }
     else if (over.id === "pallette") {
-      console.log(`5. check active is `,active, `have favid:`, favoriteId, `and pickerid:`,pickerId, `found index: `,palletteItems.findIndex(x => x.id === active.id) )
+      
       if (palletteItems.findIndex(x => x.id === active.id) === -1) {
         if (active.id === favoriteId) {
           setPalletteItems([...palletteItems, { id: favoriteId, color: favoriteColor }]);
