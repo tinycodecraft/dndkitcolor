@@ -38,6 +38,7 @@ const App = () => {
   const [activeItemOrigin, setActiveItemOrigin] = useState<string | null>(null)
 
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
+
     if (!over) {
       setActiveItem(null);
       setActiveItemOrigin(null)
@@ -65,6 +66,11 @@ const App = () => {
   }
 
   const onDragOver = ({ active, over }: DragOverEvent) => {
+
+    console.log(`1. the active is `,active)
+    console.log(`origin is `, activeItemOrigin)
+    console.log(`the acitve current `,activeItem)
+    console.log(`the over is `,over)    
     if (!over) {
       if (activeItemOrigin === null) return;
       const indx = palletteItems.findIndex(x => x.id === active.id);
@@ -80,7 +86,9 @@ const App = () => {
       const active_indx = palletteItems.findIndex(x => x.id === active.id);
       if (active_indx === -1) return;
       setPalletteItems(palletteItems.filter(x => x.id !== active.id))
-
+      //try to fix re-enter pallete dragover
+      if (activeItemOrigin === "current") setPickerId(active.id)
+      if (activeItemOrigin === "favorite") setFavoriteId(active.id)
       return
 
     }
@@ -93,6 +101,7 @@ const App = () => {
       setPalletteItems(arrayMove(palletteItems, active_indx, over_indx))
     }
     else if (over.id === "pallette") {
+      console.log(`5. check active is `,active, `have favid:`, favoriteId, `and pickerid:`,pickerId, `found index: `,palletteItems.findIndex(x => x.id === active.id) )
       if (palletteItems.findIndex(x => x.id === active.id) === -1) {
         if (active.id === favoriteId) {
           setPalletteItems([...palletteItems, { id: favoriteId, color: favoriteColor }]);
